@@ -40,15 +40,12 @@ class ImageCollectionViewController: UICollectionViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if (fetchedResultsController.sections?[0].objects!.isEmpty)! {
-            print("\n\n\n\nno data\n\n\n\n")
             API.requestPhotosUrl(lat: pin.latitude!, lon: pin.longitude!, completionHandler: urlsCompletionHandler(urls:error:))
         } else {
             activityIndicator.stopAnimating()
-            print("\n\n\n\nelse\n\n\n\n")
             let photo = fetchedResultsController.sections?[0].objects?[0] as! Photo
             let image = #imageLiteral(resourceName: "VirtualTourist_152")
             if image.jpegData(compressionQuality: 1) == photo.data {
-                print("\n\n\n\ndownload\n\n\n\n")
                 downloadImages()
             }
             try? DataController.shared.viewContext.save()
@@ -116,8 +113,6 @@ class ImageCollectionViewController: UICollectionViewController {
             cell.imageView.widthAnchor.constraint(equalToConstant: (view.frame.size.width - 2 * 2) / 2).isActive = true
             cell.imageView.heightAnchor.constraint(equalToConstant: (view.frame.size.width - 2 * 2) / 2).isActive = true
             cell.imageView.contentMode = .scaleAspectFit
-//            cell.imageView.kf.indicatorType = .activity
-//            cell.imageView.kf.setImage(with: photo.url!, placeholder: image)
             photo.data = cell.imageView.image?.jpegData(compressionQuality: 1)
             try? DataController.shared.viewContext.save()
         }
@@ -131,39 +126,9 @@ class ImageCollectionViewController: UICollectionViewController {
         DataController.shared.viewContext.delete(photoToDelete)
         try? DataController.shared.viewContext.save()
         if fetchedResultsController.sections?[0].numberOfObjects == 0 {
-            print("Downloading New Images")
             API.requestPhotosUrl(lat: pin.latitude!, lon: pin.longitude!, completionHandler: urlsCompletionHandler(urls:error:))
         }
     }
-    
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    
-    }
-    */
     
 }
 
@@ -197,8 +162,6 @@ extension ImageCollectionViewController: NSFetchedResultsControllerDelegate {
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         if type == NSFetchedResultsChangeType.insert {
-            print("Insert Object: \(newIndexPath!)")
-
             blockOperations.append(
                 BlockOperation(block: { [weak self] in
                     if let this = self {
@@ -208,7 +171,6 @@ extension ImageCollectionViewController: NSFetchedResultsControllerDelegate {
             )
         }
         else if type == NSFetchedResultsChangeType.update {
-            print("Update Object: \(indexPath!)")
             blockOperations.append(
                 BlockOperation(block: { [weak self] in
                     if let this = self {
@@ -218,8 +180,6 @@ extension ImageCollectionViewController: NSFetchedResultsControllerDelegate {
             )
         }
         else if type == NSFetchedResultsChangeType.move {
-            print("Move Object: \(indexPath!)")
-
             blockOperations.append(
                 BlockOperation(block: { [weak self] in
                     if let this = self {
@@ -229,8 +189,6 @@ extension ImageCollectionViewController: NSFetchedResultsControllerDelegate {
             )
         }
         else if type == NSFetchedResultsChangeType.delete {
-            print("Delete Object: \(indexPath!)")
-             
             blockOperations.append(
                 BlockOperation(block: { [weak self] in
                     if let this = self {
@@ -238,17 +196,11 @@ extension ImageCollectionViewController: NSFetchedResultsControllerDelegate {
                     }
                 })
             )
-//            if controller.sections?[0].numberOfObjects == 0 {
-//                print("Downloading New Images")
-//                API.requestPhotosUrl(lat: pin.latitude!, lon: pin.longitude!, completionHandler: urlsCompletionHandler(urls:error:))
-//            }
         }
     }
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         if type == NSFetchedResultsChangeType.insert {
-            print("Insert Section: \(sectionIndex)")
-
             blockOperations.append(
                 BlockOperation(block: { [weak self] in
                     if let this = self {
@@ -258,7 +210,6 @@ extension ImageCollectionViewController: NSFetchedResultsControllerDelegate {
             )
         }
         else if type == NSFetchedResultsChangeType.update {
-            print("Update Section: \(sectionIndex)")
             blockOperations.append(
                 BlockOperation(block: { [weak self] in
                     if let this = self {
@@ -268,8 +219,6 @@ extension ImageCollectionViewController: NSFetchedResultsControllerDelegate {
             )
         }
         else if type == NSFetchedResultsChangeType.delete {
-            print("Delete Section: \(sectionIndex)")
-
             blockOperations.append(
                 BlockOperation(block: { [weak self] in
                     if let this = self {
@@ -297,8 +246,6 @@ extension ImageCollectionViewController {
     func urlsCompletionHandler(urls: [URL], error: Error?) {
         activityIndicator.startAnimating()
         if !urls.isEmpty {
-            print("ALL URLS")
-            print(urls)
             var index = 0
             var photos: [Photo] = []
             while index < urls.count {
@@ -309,7 +256,6 @@ extension ImageCollectionViewController {
                 index = index + 1
                 try? DataController.shared.viewContext.save()
             }
-//            try? DataController.shared.viewContext.save() //comment this in case of bugs
             downloadImages()
             
         } else {
@@ -335,7 +281,6 @@ extension ImageCollectionViewController {
         while index < length! {
             let photo = fetchedResultsController.object(at: IndexPath.init(item: index, section: 0))
             index += 1
-            print("downloadImage: URL:\(photo.url!)")
             KingfisherManager.shared.retrieveImage(with: photo.url!) { result in
                 switch result {
                     case .success(let value):
