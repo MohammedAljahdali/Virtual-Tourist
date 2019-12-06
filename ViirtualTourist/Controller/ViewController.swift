@@ -40,9 +40,6 @@ class MapViewController: UIViewController {
         setAnnotationsLocations()
     }
     
-    
-
-
 }
 
 extension MapViewController: MKMapViewDelegate, UIGestureRecognizerDelegate {
@@ -68,8 +65,6 @@ extension MapViewController: MKMapViewDelegate, UIGestureRecognizerDelegate {
             annotation.pin = pin
             mapView.addAnnotation(annotation)
         }
-        
-        
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
@@ -77,16 +72,9 @@ extension MapViewController: MKMapViewDelegate, UIGestureRecognizerDelegate {
             sendPin(annotation: view.annotation! as! MyAnnotation)
         } else {
             deletePin(annotation: view.annotation! as! MyAnnotation)
-            
         }
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        let vc = segue.destination as! ImageCollectionViewController
-//        vc.pin =
-//    }
-    
-    
+ 
 }
 
 extension MapViewController {
@@ -114,7 +102,6 @@ extension MapViewController {
     func deletePin(annotation: MyAnnotation) {
         let pinToDelete = annotation.pin
         if let pin = pinToDelete {
-            print("pin is deleted")
             mapView.removeAnnotation(annotation)
             DataController.shared.viewContext.delete(pin)
             try? DataController.shared.viewContext.save()
@@ -130,7 +117,6 @@ extension MapViewController {
         }
     }
     
-        
 }
 
 
