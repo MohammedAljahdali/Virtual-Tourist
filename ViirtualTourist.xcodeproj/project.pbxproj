@@ -11,7 +11,7 @@
 		731800E723991B5A00E00EC5 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731800E623991B5A00E00EC5 /* API.swift */; };
 		7336475023959D0B003F9B96 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7336474F23959D0B003F9B96 /* AppDelegate.swift */; };
 		7336475223959D0B003F9B96 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7336475123959D0B003F9B96 /* SceneDelegate.swift */; };
-		7336475423959D0B003F9B96 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7336475323959D0B003F9B96 /* ViewController.swift */; };
+		7336475423959D0B003F9B96 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7336475323959D0B003F9B96 /* MapViewController.swift */; };
 		7336475723959D0B003F9B96 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7336475523959D0B003F9B96 /* Main.storyboard */; };
 		7336475C23959D12003F9B96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7336475B23959D12003F9B96 /* Assets.xcassets */; };
 		7336475F23959D12003F9B96 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7336475D23959D12003F9B96 /* LaunchScreen.storyboard */; };
@@ -22,6 +22,7 @@
 		73AA3DB4239942F500289415 /* PhotosResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AA3DB3239942F500289415 /* PhotosResponse.swift */; };
 		73AA3DB62399432E00289415 /* PhotoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AA3DB52399432E00289415 /* PhotoResponse.swift */; };
 		73C3CD0523980B9000246864 /* ImageCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C3CD0423980B9000246864 /* ImageCollectionViewController.swift */; };
+		73E2961723A9471500140C4C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 73E2961623A9471500140C4C /* GoogleService-Info.plist */; };
 		F9FCC4A59AC9DCA291FC6951 /* Pods_ViirtualTourist.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C5C1CFF1F545FB8D21DB929 /* Pods_ViirtualTourist.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,7 +33,7 @@
 		7336474C23959D0B003F9B96 /* ViirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7336474F23959D0B003F9B96 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7336475123959D0B003F9B96 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		7336475323959D0B003F9B96 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		7336475323959D0B003F9B96 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		7336475623959D0B003F9B96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7336475B23959D12003F9B96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7336475E23959D12003F9B96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -44,6 +45,7 @@
 		73AA3DB3239942F500289415 /* PhotosResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosResponse.swift; sourceTree = "<group>"; };
 		73AA3DB52399432E00289415 /* PhotoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoResponse.swift; sourceTree = "<group>"; };
 		73C3CD0423980B9000246864 /* ImageCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewController.swift; sourceTree = "<group>"; };
+		73E2961623A9471500140C4C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9C5C1CFF1F545FB8D21DB929 /* Pods_ViirtualTourist.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ViirtualTourist.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C073FB77B61815DF3D1AC356 /* Pods-ViirtualTourist.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ViirtualTourist.debug.xcconfig"; path = "Target Support Files/Pods-ViirtualTourist/Pods-ViirtualTourist.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,7 +103,7 @@
 		731800E2239914A900E00EC5 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				7336475323959D0B003F9B96 /* ViewController.swift */,
+				7336475323959D0B003F9B96 /* MapViewController.swift */,
 				73C3CD0423980B9000246864 /* ImageCollectionViewController.swift */,
 			);
 			path = Controller;
@@ -110,6 +112,7 @@
 		731800E3239914B800E00EC5 /* Extra */ = {
 			isa = PBXGroup;
 			children = (
+				73E2961623A9471500140C4C /* GoogleService-Info.plist */,
 				7336475123959D0B003F9B96 /* SceneDelegate.swift */,
 				7336475B23959D12003F9B96 /* Assets.xcassets */,
 				7336475D23959D12003F9B96 /* LaunchScreen.storyboard */,
@@ -170,6 +173,7 @@
 				7336474923959D0B003F9B96 /* Frameworks */,
 				7336474A23959D0B003F9B96 /* Resources */,
 				860E31C8ADBE1B8A458C380D /* [CP] Embed Pods Frameworks */,
+				ABE0A9B09D042C695E4ED997 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -219,6 +223,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7336475F23959D12003F9B96 /* LaunchScreen.storyboard in Resources */,
+				73E2961723A9471500140C4C /* GoogleService-Info.plist in Resources */,
 				7336475C23959D12003F9B96 /* Assets.xcassets in Resources */,
 				7336475723959D0B003F9B96 /* Main.storyboard in Resources */,
 			);
@@ -266,6 +271,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ViirtualTourist/Pods-ViirtualTourist-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		ABE0A9B09D042C695E4ED997 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ViirtualTourist/Pods-ViirtualTourist-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ViirtualTourist/Pods-ViirtualTourist-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ViirtualTourist/Pods-ViirtualTourist-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -281,7 +303,7 @@
 				73AA3DB62399432E00289415 /* PhotoResponse.swift in Sources */,
 				73AA3DB4239942F500289415 /* PhotosResponse.swift in Sources */,
 				731800E52399150000E00EC5 /* ImageCollectionViewCell.swift in Sources */,
-				7336475423959D0B003F9B96 /* ViewController.swift in Sources */,
+				7336475423959D0B003F9B96 /* MapViewController.swift in Sources */,
 				7336475023959D0B003F9B96 /* AppDelegate.swift in Sources */,
 				731800E723991B5A00E00EC5 /* API.swift in Sources */,
 				7336475223959D0B003F9B96 /* SceneDelegate.swift in Sources */,

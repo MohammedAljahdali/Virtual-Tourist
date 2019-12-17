@@ -34,7 +34,7 @@ class API {
                 let pages = json.photos.pages
                 let photos = json.photos.photo
                 let urls = createPhotosURL(photos: photos)
-                pageNumber = Int.random(in: 1...pages)
+                pageNumber = Int.random(in: 0...pages)
                 DispatchQueue.main.async {
                 completionHandler(urls, nil)
                 }
