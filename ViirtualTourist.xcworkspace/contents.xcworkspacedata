@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/mohammedaljahdali/Documents/Development/Projects/IOS Projects/ViirtualTourist/ViirtualTourist/Controller/LoginViewController.swift">
+   </FileRef>
+   <FileRef
       location = "group:ViirtualTourist.xcodeproj">
    </FileRef>
    <FileRef

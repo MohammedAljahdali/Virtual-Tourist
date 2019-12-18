@@ -17,17 +17,61 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="wDH-2s-ZnC"/>
+                        <segue destination="sTb-hH-vbZ" kind="relationship" relationship="rootViewController" id="At9-Q5-IkX"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o46-rZ-I3g" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-674" y="151"/>
+            <point key="canvasLocation" x="-1070" y="137"/>
+        </scene>
+        <!--Login View Controller-->
+        <scene sceneID="sQ8-DE-Icf">
+            <objects>
+                <viewController storyboardIdentifier="loginViewController" id="sTb-hH-vbZ" customClass="LoginViewController" customModule="ViirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="g2I-oO-CCg">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Virtual Tourist" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UTz-bU-eXD">
+                                <rect key="frame" x="102" y="465" width="210.5" height="20.5"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uCK-pz-1Ux">
+                                <rect key="frame" x="151.5" y="534" width="111" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Enter the App"/>
+                                <connections>
+                                    <action selector="enterTheApp:" destination="L2S-kO-dcu" eventType="touchUpInside" id="3PU-OG-38Z"/>
+                                    <action selector="enterTheAppTapped:" destination="sTb-hH-vbZ" eventType="touchUpInside" id="9yQ-rk-QbX"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="UTz-bU-eXD" firstAttribute="centerX" secondItem="75C-wP-HNl" secondAttribute="centerX" id="2O8-Y4-GQ1"/>
+                            <constraint firstItem="UTz-bU-eXD" firstAttribute="centerY" secondItem="75C-wP-HNl" secondAttribute="centerY" id="Qs4-zN-GJN"/>
+                            <constraint firstItem="uCK-pz-1Ux" firstAttribute="top" secondItem="UTz-bU-eXD" secondAttribute="bottom" constant="48.5" id="SbK-0P-pom"/>
+                            <constraint firstItem="uCK-pz-1Ux" firstAttribute="centerX" secondItem="75C-wP-HNl" secondAttribute="centerX" id="iJv-Vs-kFu"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="75C-wP-HNl"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="53e-wx-PY6"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="push" identifier="mapViewSegue" id="9of-GC-i0l"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="E5k-eF-Il0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="L2S-kO-dcu" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="-141" y="137"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="MapViewController" customModule="ViirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="mapViewController" id="BYZ-38-t0r" customClass="MapViewController" customModule="ViirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -50,9 +94,8 @@
                         <outlet property="mapView" destination="mCI-IN-t2w" id="yNq-zz-D3P"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-12" y="151"/>
+            <point key="canvasLocation" x="1090" y="137"/>
         </scene>
         <!--Image Collection View Controller-->
         <scene sceneID="cIY-JF-6Wj">
@@ -109,7 +152,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nwk-DB-gCn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="663.768115942029" y="150.66964285714286"/>
+            <point key="canvasLocation" x="1804" y="137"/>
         </scene>
     </scenes>
     <resources>

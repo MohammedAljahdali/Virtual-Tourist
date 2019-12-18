@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 import Kingfisher
+import Firebase
+import FirebaseUI
 
 private let reuseIdentifier = "imageCell"
 
@@ -20,6 +22,9 @@ class ImageCollectionViewController: UICollectionViewController {
     var pin: Pin!
     var fetchedResultsController: NSFetchedResultsController<Photo>!
     var blockOperations: [BlockOperation] = []
+    var db: Firestore!
+    var user: User!
+    var authUI: FUIAuth!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -253,8 +258,10 @@ extension ImageCollectionViewController {
                 photos[index].createdAt = Date()
                 photos[index].url = urls[index]
                 photos[index].pin = pin
+                db.collection("users").document("\(user.email!)").collection("pins").document("\(self.pin.longitude!)&\(self.pin.latitude!)").collection("urls").addDocument(data: ["url":urls[index].absoluteString])
                 index = index + 1
                 try? DataController.shared.viewContext.save()
+                
             }
             downloadImages()
             

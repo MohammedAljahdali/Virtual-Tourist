@@ -18,6 +18,10 @@ class MapViewController: UIViewController {
     
     var editingMode: Bool = false
     var pins: [Pin] = []
+    // TODO: Bool for sharing mode
+    var authUI: FUIAuth!
+    var user: User!
+    var db: Firestore!
     
     
     @IBOutlet weak var mapView: MKMapView!
@@ -28,6 +32,7 @@ class MapViewController: UIViewController {
         mapView.addGestureRecognizer(gestureRecognizer)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(setUpPinDeletion))
         navigationItem.title = "Virtual Tourist"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logout))
     }
     
     override func viewDidLoad() {
@@ -41,6 +46,8 @@ class MapViewController: UIViewController {
             pins = result
         }
         setAnnotationsLocations()
+        
+        
     }
     
 }
@@ -82,6 +89,11 @@ extension MapViewController: MKMapViewDelegate, UIGestureRecognizerDelegate {
 
 extension MapViewController {
     func savePin(annotation: MyAnnotation) -> Pin {
+        
+        db.collection("users").document("\(user.email!)").collection("pins").document("\(annotation.coordinate.longitude)&\(annotation.coordinate.latitude)").setData([
+            "longitude": annotation.coordinate.longitude,
+            "latitude": annotation.coordinate.latitude
+        ])
         let latitudeString = "\(annotation.coordinate.latitude)"
         let longitudeString = "\(annotation.coordinate.longitude)"
         let pin = Pin(context: DataController.shared.viewContext)
@@ -116,6 +128,9 @@ extension MapViewController {
         let pinToSend = annotation.pin
         if let pin = pinToSend {
             vc.pin = pin
+            vc.authUI = authUI
+            vc.db = db
+            vc.user = user
             present(vc, animated: true, completion: nil)
         }
     }
@@ -125,8 +140,21 @@ extension MapViewController {
 // MARK: Firebase Auth
 
 extension MapViewController: FUIAuthDelegate {
-    func setupFirebase() {
-        
+    
+    @objc func logout() {
+        do {
+            try authUI.signOut()
+            user = nil
+            let vc = storyboard?.instantiateViewController(identifier: "loginViewController") as! LoginViewController
+            vc.user = nil
+            vc.authUI = self.authUI
+            // TODO: Fix user can enter after logout without re logging in
+            navigationController?.popViewController(animated: true)
+        } catch {
+            let alertVC = UIAlertController(title: "Logout Failed", message: "Sorry Logout failled: \(error.localizedDescription)", preferredStyle: .alert)
+            alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alertVC, animated: true, completion: nil)
+        }
     }
 }
 

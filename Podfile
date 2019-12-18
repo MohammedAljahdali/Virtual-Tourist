@@ -7,6 +7,9 @@ target 'ViirtualTourist' do
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
   pod 'FirebaseUI'
+  pod 'Firebase/Core'
+  pod 'Firebase/Firestore'
+  pod 'FirebaseFirestoreSwift'
 
 
 end
