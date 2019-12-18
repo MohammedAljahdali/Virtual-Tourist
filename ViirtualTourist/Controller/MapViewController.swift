@@ -32,7 +32,7 @@ class MapViewController: UIViewController {
         mapView.addGestureRecognizer(gestureRecognizer)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(setUpPinDeletion))
         navigationItem.title = "Virtual Tourist"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logout))
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logout))
     }
     
     override func viewDidLoad() {
@@ -50,7 +50,6 @@ extension MapViewController: MKMapViewDelegate, UIGestureRecognizerDelegate {
         if (gestureReconizer.state == .ended && !editingMode) {
             let location = gestureReconizer.location(in: mapView)
             let coordinate = mapView.convert(location,toCoordinateFrom: mapView)
-            // Add annotation:
             let annotation = MyAnnotation(coordinate: coordinate)
             savePin(annotation: annotation)
             mapView.addAnnotation(annotation)
@@ -121,35 +120,19 @@ extension MapViewController {
 
 extension MapViewController: FUIAuthDelegate {
     
-    @objc func logout() {
-        do {
-            try authUI.signOut()
-            user = nil
-            let vc = storyboard?.instantiateViewController(identifier: "loginViewController") as! LoginViewController
-            vc.user = nil
-            vc.authUI = self.authUI
-            // TODO: Fix user can enter after logout without re logging in
-            navigationController?.popViewController(animated: true)
-        } catch {
-            let alertVC = UIAlertController(title: "Logout Failed", message: "Sorry Logout failled: \(error.localizedDescription)", preferredStyle: .alert)
-            alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alertVC, animated: true, completion: nil)
-        }
-    }
-    
-//    func getPins() {
-//        db.collection("users").document("\(user.email!)").collection("pins").getDocuments { (document, error) in
-//            guard let document = document else {
-//              print("Error fetching document: \(error!)")
-//              return
-//            }
-//            for doc in document.documents {
-//                print(doc.data().description)
-//                let longitude = doc.data()["longitude"] as! Double
-//                let latitude = doc.data()["latitude"] as! Double
-//                let pin2 = Pin2(latitude: latitude, longitude: longitude)
-//                self.pins2.append(pin2)
-//            }
+//    @objc func logout() {
+//        do {
+//            try authUI.signOut()
+//            user = nil
+//            let vc = storyboard?.instantiateViewController(identifier: "loginViewController") as! LoginViewController
+//            vc.user = nil
+//            vc.authUI = self.authUI
+//
+//            navigationController?.popViewController(animated: true)
+//        } catch {
+//            let alertVC = UIAlertController(title: "Logout Failed", message: "Sorry Logout failled: \(error.localizedDescription)", preferredStyle: .alert)
+//            alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//            self.present(alertVC, animated: true, completion: nil)
 //        }
 //    }
     

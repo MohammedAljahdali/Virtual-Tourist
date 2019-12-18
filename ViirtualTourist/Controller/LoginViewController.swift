@@ -37,7 +37,6 @@ class LoginViewController: UIViewController {
         authUser()
         setupButtons()
         db = Firestore.firestore()
-        // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -51,16 +50,6 @@ class LoginViewController: UIViewController {
         vc.db = db
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 extension LoginViewController: FUIAuthDelegate {
@@ -68,12 +57,7 @@ extension LoginViewController: FUIAuthDelegate {
     func setupAuth() {
         authUI = FUIAuth.defaultAuthUI()
         authUI!.delegate = self
-        let providers: [FUIAuthProvider] = [
-          FUIGoogleAuth(),
-//          FUIFacebookAuth(),
-//          FUITwitterAuth(),
-//          FUIPhoneAuth(authUI:FUIAuth.defaultAuthUI()),
-        ]
+        let providers: [FUIAuthProvider] = [FUIGoogleAuth()]
         authUI.providers = providers
     }
     
@@ -83,7 +67,6 @@ extension LoginViewController: FUIAuthDelegate {
                 if self.user != activeUser {
                     self.user = activeUser
                     self.db.collection("users").document("\(activeUser.email!)").setData(["name":activeUser.displayName!])
-                    
                 }
             } else {
                 self.presentLogin()
@@ -99,13 +82,6 @@ extension LoginViewController: FUIAuthDelegate {
         navigationItem.title = "Virtual Tourist"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Login", style: .plain, target: self, action: #selector(login))
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logout))
-//        if user == nil {
-//            navigationItem.leftBarButtonItem?.isEnabled = false
-//            navigationItem.rightBarButtonItem?.isEnabled = true
-//        } else {
-//            navigationItem.leftBarButtonItem?.isEnabled = true
-//            navigationItem.rightBarButtonItem?.isEnabled = false
-//        }
     }
     
     
@@ -134,20 +110,6 @@ extension LoginViewController: FUIAuthDelegate {
                 self.present(alertVC, animated: true, completion: nil)
             }
         }
-    }
-    
-    func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
-        guard error != nil else {return}
-//        if let user = user {
-          // The user's ID, unique to the Firebase project.
-          // Do NOT use this value to authenticate with your backend server,
-          // if you have one. Use getTokenWithCompletion:completion: instead.
-            // TODO: make this the unique user id in firestoe
-//          let uid = user.uid
-//          let email = user.email
-//          let photoURL = user.photoURL
-          // ...
-//        }
     }
     
 }
