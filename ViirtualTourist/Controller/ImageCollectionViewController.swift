@@ -53,7 +53,6 @@ class ImageCollectionViewController: UICollectionViewController {
                             self.urls.append(URL(string: urlString)!)
                         }
                         self.collectionView.reloadData()
-//                        self.downloadImages()
                     }
                 }
             }
@@ -102,7 +101,6 @@ class ImageCollectionViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ImageCollectionViewCell
-//        let photo = photos[indexPath.row]
         if urls.isEmpty {
             cell.imageView.image = #imageLiteral(resourceName: "VirtualTourist_180")
         } else {
@@ -134,7 +132,6 @@ extension ImageCollectionViewController {
             db.collection("users").document("\(user.email!)").collection("pins").document("\(self.pin2.longitude)&\(self.pin2.latitude)").collection("urls").document("\(index)").updateData(["url":urls[index].absoluteString])
             index = index + 1
         }
-//        downloadImages()
         activityIndicator.stopAnimating()
         collectionView.reloadData()
         if pages > 2 {
@@ -159,7 +156,6 @@ extension ImageCollectionViewController {
                 index = index + 1
                 
             }
-//            downloadImages()
             activityIndicator.stopAnimating()
             collectionView.reloadData()
             if pages > 2 {
@@ -186,26 +182,6 @@ extension ImageCollectionViewController {
             show(alret, sender: nil)
         }
     }
-    
-//    func downloadImages() {
-//
-//        var index = 0
-//        while index < self.urls.count {
-//            KingfisherManager.shared.retrieveImage(with: self.urls[index]) { result in
-//                switch result {
-//                    case .success(let value):
-//                        self.photos.append(value.image)
-//                    case .failure(let error):
-//                        print(error)
-//                }
-//            }
-//            index += 1
-//        }
-//        print("download finshed")
-//        print(photos)
-//        collectionView.reloadData()
-//        activityIndicator.stopAnimating()
-//    }
     
     func getPageNumber() {
         db.collection("users").document("\(user.email!)").collection("pins").document("\(self.pin2.longitude)&\(self.pin2.latitude)").addSnapshotListener { (document, error) in
