@@ -17,7 +17,7 @@ import FirebaseUI
 class MapViewController: UIViewController {
     
     var editingMode: Bool = false
-    var pins: [Pin] = []
+    var pins2: [Pin2] = []
     // TODO: Bool for sharing mode
     var authUI: FUIAuth!
     var user: User!
@@ -39,15 +39,8 @@ class MapViewController: UIViewController {
         super.viewDidLoad()
         mapView.delegate = self
         setUpGesture()
-        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-        let sort = NSSortDescriptor(key: "latitude", ascending: true)
-        fetchRequest.sortDescriptors = [sort]
-        if let result = try? DataController.shared.viewContext.fetch(fetchRequest) {
-            pins = result
-        }
+        pinsListener()
         setAnnotationsLocations()
-        
-        
     }
     
 }
@@ -59,20 +52,19 @@ extension MapViewController: MKMapViewDelegate, UIGestureRecognizerDelegate {
             let coordinate = mapView.convert(location,toCoordinateFrom: mapView)
             // Add annotation:
             let annotation = MyAnnotation(coordinate: coordinate)
-            annotation.pin = savePin(annotation: annotation)
+            savePin(annotation: annotation)
             mapView.addAnnotation(annotation)
         }
     }
     
     func setAnnotationsLocations() {
         mapView.removeAnnotations(mapView.annotations)
-        for pin in pins {
-            let latitude = CLLocationDegrees(Double(pin.latitude!)!)
-            let longitude = CLLocationDegrees(Double(pin.longitude!)!)
+        for pin in pins2 {
+            let latitude = CLLocationDegrees(pin.latitude)
+            let longitude = CLLocationDegrees(pin.longitude)
             let coordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
             let annotation = MyAnnotation(coordinate: coordinate)
             annotation.coordinate = coordinate
-            annotation.pin = pin
             mapView.addAnnotation(annotation)
         }
     }
@@ -88,19 +80,12 @@ extension MapViewController: MKMapViewDelegate, UIGestureRecognizerDelegate {
 }
 
 extension MapViewController {
-    func savePin(annotation: MyAnnotation) -> Pin {
-        
+    func savePin(annotation: MyAnnotation) {
         db.collection("users").document("\(user.email!)").collection("pins").document("\(annotation.coordinate.longitude)&\(annotation.coordinate.latitude)").setData([
             "longitude": annotation.coordinate.longitude,
-            "latitude": annotation.coordinate.latitude
+            "latitude": annotation.coordinate.latitude,
+            "pageNumber": 1
         ])
-        let latitudeString = "\(annotation.coordinate.latitude)"
-        let longitudeString = "\(annotation.coordinate.longitude)"
-        let pin = Pin(context: DataController.shared.viewContext)
-        pin.latitude = latitudeString
-        pin.longitude = longitudeString
-        try? DataController.shared.viewContext.save()
-        return pin
     }
     
     @objc func setUpPinDeletion() {
@@ -115,24 +100,19 @@ extension MapViewController {
     }
     
     func deletePin(annotation: MyAnnotation) {
-        let pinToDelete = annotation.pin
-        if let pin = pinToDelete {
-            mapView.removeAnnotation(annotation)
-            DataController.shared.viewContext.delete(pin)
-            try? DataController.shared.viewContext.save()
-        }
+        db.collection("users").document("\(user.email!)").collection("pins").document("\(annotation.coordinate.longitude)&\(annotation.coordinate.latitude)").delete()
+        pins2.removeAll()
+        mapView.removeAnnotation(annotation)
     }
     
     func sendPin(annotation: MyAnnotation) {
         let vc = storyboard?.instantiateViewController(identifier: "imageCollectionView") as! ImageCollectionViewController
-        let pinToSend = annotation.pin
-        if let pin = pinToSend {
-            vc.pin = pin
-            vc.authUI = authUI
-            vc.db = db
-            vc.user = user
-            present(vc, animated: true, completion: nil)
-        }
+        vc.pin2 = Pin2(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)
+        vc.pinID = "\(annotation.coordinate.longitude)&\(annotation.coordinate.latitude)"
+        vc.authUI = authUI
+        vc.db = db
+        vc.user = user
+        present(vc, animated: true, completion: nil)
     }
     
 }
@@ -156,6 +136,40 @@ extension MapViewController: FUIAuthDelegate {
             self.present(alertVC, animated: true, completion: nil)
         }
     }
+    
+//    func getPins() {
+//        db.collection("users").document("\(user.email!)").collection("pins").getDocuments { (document, error) in
+//            guard let document = document else {
+//              print("Error fetching document: \(error!)")
+//              return
+//            }
+//            for doc in document.documents {
+//                print(doc.data().description)
+//                let longitude = doc.data()["longitude"] as! Double
+//                let latitude = doc.data()["latitude"] as! Double
+//                let pin2 = Pin2(latitude: latitude, longitude: longitude)
+//                self.pins2.append(pin2)
+//            }
+//        }
+//    }
+    
+    func pinsListener() {
+        db.collection("users").document("\(user.email!)").collection("pins").addSnapshotListener { (document, error) in
+            guard let document = document else {
+              print("Error fetching document: \(error!)")
+              return
+            }
+            for doc in document.documents {
+                print("\(doc.data().description)+12131")
+                let longitude = doc.data()["longitude"] as! Double
+                let latitude = doc.data()["latitude"] as! Double
+                let pin2 = Pin2(latitude: latitude, longitude: longitude)
+                self.pins2.append(pin2)
+            }
+            self.setAnnotationsLocations()
+        }
+    }
+    
 }
 
 

@@ -13,17 +13,20 @@ import Kingfisher
 class API {
     static var pageNumber = 1
     static let baseURL = "https://api.flickr.com/services/rest"
-    class func createURL(lat: String, lon: String) -> URL {
+    
+    
+    class func createURL(lat: Double, lon: Double) -> URL {
         return URL(string: "https://api.flickr.com/services/rest?api_key=732c918b7b0e1232e8c9dd9dc1257c4c&method=flickr.photos.search&format=json&lat=\(lat)&lon=\(lon)&per_page=9&accuracy=11&nojsoncallback=1&page=\(pageNumber)")!
     }
     
     
-    class func requestPhotosUrl(lat: String, lon: String, completionHandler: @escaping ([URL], Error?) -> Void) {
+    class func requestPhotosUrl(lat: Double, lon: Double, page: Int, completionHandler: @escaping (Int, [URL], Error?) -> Void) {
+        pageNumber = page
         let url = createURL(lat: lat, lon: lon)
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
                 DispatchQueue.main.async {
-                    completionHandler([], error)
+                    completionHandler(0, [], error)
                 }
                 print("error DogAPI/requestDogImageUrl")
                 return
@@ -34,14 +37,13 @@ class API {
                 let pages = json.photos.pages
                 let photos = json.photos.photo
                 let urls = createPhotosURL(photos: photos)
-                pageNumber = Int.random(in: 0...pages)
                 DispatchQueue.main.async {
-                completionHandler(urls, nil)
+                    completionHandler(pages, urls, nil)
                 }
             } catch {
                 print(error)
                 DispatchQueue.main.async {
-                    completionHandler([], error)
+                    completionHandler(0, [], error)
                 }
             }
         }

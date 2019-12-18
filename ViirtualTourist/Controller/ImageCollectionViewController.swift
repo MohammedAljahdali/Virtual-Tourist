@@ -18,42 +18,45 @@ class ImageCollectionViewController: UICollectionViewController {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
-    
-    var pin: Pin!
-    var fetchedResultsController: NSFetchedResultsController<Photo>!
+    let placeholder: UIImage = #imageLiteral(resourceName: "VirtualTourist_120")
+    var urls: [URL] = []
     var blockOperations: [BlockOperation] = []
     var db: Firestore!
     var user: User!
     var authUI: FUIAuth!
+    var pinID: String!
+    var pin2: Pin2!
+    var pageNumber: Int! = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupFetchResultsController()
         setupLayout()
         addButton()
-    }
-    
-    deinit {
-        // Cancel all block operations when VC deallocates
-        for operation: BlockOperation in blockOperations {
-            operation.cancel()
-        }
-
-        blockOperations.removeAll(keepingCapacity: false)
+        getPageNumber()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if (fetchedResultsController.sections?[0].objects!.isEmpty)! {
-            API.requestPhotosUrl(lat: pin.latitude!, lon: pin.longitude!, completionHandler: urlsCompletionHandler(urls:error:))
-        } else {
-            activityIndicator.stopAnimating()
-            let photo = fetchedResultsController.sections?[0].objects?[0] as! Photo
-            let image = #imageLiteral(resourceName: "VirtualTourist_152")
-            if image.jpegData(compressionQuality: 1) == photo.data {
-                downloadImages()
+        print("viewillappear")
+        if urls.isEmpty {
+            print("urls is empty")
+            db.collection("users").document("\(user.email!)").collection("pins").document("\(pinID!)").collection("urls").getDocuments { (documents, error) in
+                if let documents = documents {
+                    if documents.count == 0 {
+                        print("else of if let documents")
+                        API.requestPhotosUrl(lat: self.pin2.latitude, lon: self.pin2.longitude, page: self.pageNumber, completionHandler: self.urlsCompletionHandler(pages:urls:error:))
+                    } else {
+                        print("else else appending urls")
+                        for document in documents.documents {
+                            let urlString = document.data()["url"] as! String
+                            print(urlString)
+                            self.urls.append(URL(string: urlString)!)
+                        }
+                        self.collectionView.reloadData()
+//                        self.downloadImages()
+                    }
+                }
             }
-            try? DataController.shared.viewContext.save()
         }
     }
     
@@ -69,8 +72,8 @@ class ImageCollectionViewController: UICollectionViewController {
     fileprivate func addButton(){
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Button", for: UIControl.State.normal)
-        button.setTitleColor(UIColor.black, for: UIControl.State.normal)
+        button.setTitle("Refresh", for: UIControl.State.normal)
+        button.setTitleColor(UIColor.systemBlue, for: UIControl.State.normal)
         self.view.addSubview(button)
         button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         button.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
@@ -81,190 +84,93 @@ class ImageCollectionViewController: UICollectionViewController {
     }
     
     @objc func removePhotos() {
-        let length = fetchedResultsController.sections?[0].objects?.count
-        var index = 0
-        while index < length! {
-            let photo = fetchedResultsController.object(at: IndexPath.init(item: index, section: 0))
-            DataController.shared.viewContext.delete(photo)
-            index += 1
-        }
-        try? DataController.shared.viewContext.save()
-        API.requestPhotosUrl(lat: pin.latitude!, lon: pin.longitude!, completionHandler: urlsCompletionHandler(urls:error:))
+        urls.removeAll()
+        API.requestPhotosUrl(lat: pin2!.latitude, lon: pin2!.longitude, page: pageNumber!, completionHandler: refreshUrlCompletionHnadler(pages:urls:error:))
     }
-
+    
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return fetchedResultsController.sections?.count ?? 1
+        return 1
         
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return fetchedResultsController.sections?[0].numberOfObjects ?? 0
+        return 9
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let photo = fetchedResultsController.object(at: indexPath)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ImageCollectionViewCell
-        if let data = photo.data {
-            cell.imageView.image = UIImage(data: data)
-            cell.imageView.widthAnchor.constraint(equalToConstant: (view.frame.size.width - 2 * 2) / 2).isActive = true
-            cell.imageView.heightAnchor.constraint(equalToConstant: (view.frame.size.width - 2 * 2) / 2).isActive = true
-            cell.imageView.contentMode = .scaleAspectFit
+//        let photo = photos[indexPath.row]
+        if urls.isEmpty {
+            cell.imageView.image = #imageLiteral(resourceName: "VirtualTourist_180")
         } else {
-            let image = #imageLiteral(resourceName: "VirtualTourist_152")
-            cell.imageView.image = image
-            cell.imageView.widthAnchor.constraint(equalToConstant: (view.frame.size.width - 2 * 2) / 2).isActive = true
-            cell.imageView.heightAnchor.constraint(equalToConstant: (view.frame.size.width - 2 * 2) / 2).isActive = true
-            cell.imageView.contentMode = .scaleAspectFit
-            photo.data = cell.imageView.image?.jpegData(compressionQuality: 1)
-            try? DataController.shared.viewContext.save()
+            cell.imageView.kf.setImage(with: urls[indexPath.row], placeholder: placeholder)
         }
+        cell.imageView.widthAnchor.constraint(equalToConstant: (view.frame.size.width - 2 * 2) / 2).isActive = true
+        cell.imageView.heightAnchor.constraint(equalToConstant: (view.frame.size.width - 2 * 2) / 2).isActive = true
+        cell.imageView.contentMode = .scaleAspectFit
         return cell
     }
 
     // MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let photoToDelete = fetchedResultsController.object(at: indexPath)
-        DataController.shared.viewContext.delete(photoToDelete)
-        try? DataController.shared.viewContext.save()
-        if fetchedResultsController.sections?[0].numberOfObjects == 0 {
-            API.requestPhotosUrl(lat: pin.latitude!, lon: pin.longitude!, completionHandler: urlsCompletionHandler(urls:error:))
-        }
-    }
-    
-}
-
-// MARK: FetchedResultControllerDelegate
-
-extension ImageCollectionViewController: NSFetchedResultsControllerDelegate {
-    fileprivate func setupFetchResultsController() {
-        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
-        let sortDescriptors = NSSortDescriptor(key: "createdAt", ascending: false)
-        fetchRequest.sortDescriptors = [sortDescriptors]
-        let predicate = NSPredicate(format: "pin == %@", pin)
-        fetchRequest.predicate = predicate
-
-    
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DataController.shared.viewContext, sectionNameKeyPath: nil, cacheName: "pin: \(pin.latitude!)+\(pin.longitude!)")
         
-        fetchedResultsController.delegate = self
-        do {
-            try fetchedResultsController.performFetch()
-        } catch {
-            print("Error: \(error.localizedDescription)")
-        }
     }
-
     
-    
-
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        blockOperations.removeAll(keepingCapacity: false)
-    }
-
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        if type == NSFetchedResultsChangeType.insert {
-            blockOperations.append(
-                BlockOperation(block: { [weak self] in
-                    if let this = self {
-                        this.collectionView!.insertItems(at: [newIndexPath!])
-                    }
-                })
-            )
-        }
-        else if type == NSFetchedResultsChangeType.update {
-            blockOperations.append(
-                BlockOperation(block: { [weak self] in
-                    if let this = self {
-                        this.collectionView!.reloadItems(at: [indexPath!])
-                    }
-                })
-            )
-        }
-        else if type == NSFetchedResultsChangeType.move {
-            blockOperations.append(
-                BlockOperation(block: { [weak self] in
-                    if let this = self {
-                        this.collectionView!.moveItem(at: indexPath!, to: newIndexPath!)
-                    }
-                })
-            )
-        }
-        else if type == NSFetchedResultsChangeType.delete {
-            blockOperations.append(
-                BlockOperation(block: { [weak self] in
-                    if let this = self {
-                        this.collectionView!.deleteItems(at: [indexPath!])
-                    }
-                })
-            )
-        }
-    }
-
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-        if type == NSFetchedResultsChangeType.insert {
-            blockOperations.append(
-                BlockOperation(block: { [weak self] in
-                    if let this = self {
-                        this.collectionView!.insertSections(IndexSet(integer: sectionIndex))
-                    }
-                })
-            )
-        }
-        else if type == NSFetchedResultsChangeType.update {
-            blockOperations.append(
-                BlockOperation(block: { [weak self] in
-                    if let this = self {
-                        this.collectionView!.reloadSections(IndexSet(integer: sectionIndex))
-                    }
-                })
-            )
-        }
-        else if type == NSFetchedResultsChangeType.delete {
-            blockOperations.append(
-                BlockOperation(block: { [weak self] in
-                    if let this = self {
-                        this.collectionView!.deleteSections(IndexSet(integer: sectionIndex))
-                    }
-                })
-            )
-        }
-    }
-
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        collectionView!.performBatchUpdates({ () -> Void in
-            for operation: BlockOperation in self.blockOperations {
-                operation.start()
-            }
-        }, completion: { (finished) -> Void in
-            self.blockOperations.removeAll(keepingCapacity: false)
-        })
-    }
-
-
 }
+
+
 
 extension ImageCollectionViewController {
-    func urlsCompletionHandler(urls: [URL], error: Error?) {
+    
+    func refreshUrlCompletionHnadler(pages: Int, urls: [URL], error: Error?) {
         activityIndicator.startAnimating()
+        self.urls = urls
+        var index = 0
+        while index < urls.count {
+            db.collection("users").document("\(user.email!)").collection("pins").document("\(self.pin2.longitude)&\(self.pin2.latitude)").collection("urls").document("\(index)").updateData(["url":urls[index].absoluteString])
+            index = index + 1
+        }
+//        downloadImages()
+        activityIndicator.stopAnimating()
+        collectionView.reloadData()
+        if pages > 2 {
+            if pageNumber! < pages {
+                pageNumber = pageNumber + 1
+                db.collection("users").document("\(user.email!)").collection("pins").document("\(self.pin2.longitude)&\(self.pin2.latitude)").updateData(["pageNumber": pageNumber!])
+            } else {
+                pageNumber = 1
+                db.collection("users").document("\(user.email!)").collection("pins").document("\(self.pin2.longitude)&\(self.pin2.latitude)").updateData(["pageNumber": pageNumber!])
+            }
+        }
+    }
+    
+    func urlsCompletionHandler(pages: Int, urls: [URL], error: Error?) {
+        activityIndicator.startAnimating()
+        print("in urlscomp")
         if !urls.isEmpty {
+            self.urls = urls
             var index = 0
-            var photos: [Photo] = []
             while index < urls.count {
-                photos.append(Photo(context: DataController.shared.viewContext))
-                photos[index].createdAt = Date()
-                photos[index].url = urls[index]
-                photos[index].pin = pin
-                db.collection("users").document("\(user.email!)").collection("pins").document("\(self.pin.longitude!)&\(self.pin.latitude!)").collection("urls").addDocument(data: ["url":urls[index].absoluteString])
+                db.collection("users").document("\(user.email!)").collection("pins").document("\(self.pin2.longitude)&\(self.pin2.latitude)").collection("urls").document("\(index)").setData(["url":urls[index].absoluteString])
                 index = index + 1
-                try? DataController.shared.viewContext.save()
                 
             }
-            downloadImages()
-            
+//            downloadImages()
+            activityIndicator.stopAnimating()
+            collectionView.reloadData()
+            if pages > 2 {
+                if pageNumber! < pages {
+                    pageNumber = pageNumber + 1
+                    db.collection("users").document("\(user.email!)").collection("pins").document("\(self.pin2.longitude)&\(self.pin2.latitude)").updateData(["pageNumber": pageNumber!])
+                } else {
+                    pageNumber = 1
+                    db.collection("users").document("\(user.email!)").collection("pins").document("\(self.pin2.longitude)&\(self.pin2.latitude)").updateData(["pageNumber": pageNumber!])
+                }
+            }
         } else {
             var message = ""
             if error == nil {
@@ -281,23 +187,31 @@ extension ImageCollectionViewController {
         }
     }
     
-    func downloadImages() {
-        activityIndicator.stopAnimating()
-        let length = fetchedResultsController.sections?[0].objects?.count
-        var index = 0
-        while index < length! {
-            let photo = fetchedResultsController.object(at: IndexPath.init(item: index, section: 0))
-            index += 1
-            KingfisherManager.shared.retrieveImage(with: photo.url!) { result in
-                switch result {
-                    case .success(let value):
-                        photo.data = value.image.jpegData(compressionQuality: 1)
-                    case .failure(let error):
-                        print(error)
-                }
-            }
+//    func downloadImages() {
+//
+//        var index = 0
+//        while index < self.urls.count {
+//            KingfisherManager.shared.retrieveImage(with: self.urls[index]) { result in
+//                switch result {
+//                    case .success(let value):
+//                        self.photos.append(value.image)
+//                    case .failure(let error):
+//                        print(error)
+//                }
+//            }
+//            index += 1
+//        }
+//        print("download finshed")
+//        print(photos)
+//        collectionView.reloadData()
+//        activityIndicator.stopAnimating()
+//    }
+    
+    func getPageNumber() {
+        db.collection("users").document("\(user.email!)").collection("pins").document("\(self.pin2.longitude)&\(self.pin2.latitude)").addSnapshotListener { (document, error) in
+            guard let document = document else {return}
+            guard let data = document.data() else {return}
+            self.pageNumber = (data["pageNumber"] as! Int)
         }
-
-        try? DataController.shared.viewContext.save()
     }
 }

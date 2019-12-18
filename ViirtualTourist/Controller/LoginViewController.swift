@@ -28,12 +28,6 @@ class LoginViewController: UIViewController {
         } else {
            performSegue(withIdentifier: "mapViewSegue", sender: nil)
         }
-        
-//        let vc = storyboard?.instantiateViewController(identifier: "mapViewController") as! MapViewController
-//        vc.modalPresentationStyle = .fullScreen
-//        vc.user = user
-//        vc.authUI = authUI
-//        present(vc, animated: true, completion: nil)
     }
     
     
