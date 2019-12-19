@@ -5,7 +5,7 @@ A virtual touring app that allow user to drop pins on the map and see picture fr
 * Google Auth
 * Virtual Tourist data is stored on firestore
 * Data is linked with user Google account
-* Ability to share pin
+* Ability to share pins
 * A table view for shared pins
 
 ## How to share a pin?
