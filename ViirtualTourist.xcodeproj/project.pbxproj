@@ -18,6 +18,8 @@
 		736F8B112399628700FB57AC /* MyAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736F8B102399628700FB57AC /* MyAnnotation.swift */; };
 		736F8B1323996D4300FB57AC /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736F8B1223996D4300FB57AC /* Response.swift */; };
 		737DBE1823AA608B00A24C37 /* Pin2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737DBE1723AA608B00A24C37 /* Pin2.swift */; };
+		737DBE1A23AAE21700A24C37 /* SharedPinsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737DBE1923AAE21700A24C37 /* SharedPinsTableViewController.swift */; };
+		737DBE1C23AAF41700A24C37 /* SharedPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737DBE1B23AAF41700A24C37 /* SharedPin.swift */; };
 		73AA3DB4239942F500289415 /* PhotosResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AA3DB3239942F500289415 /* PhotosResponse.swift */; };
 		73AA3DB62399432E00289415 /* PhotoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AA3DB52399432E00289415 /* PhotoResponse.swift */; };
 		73C3CD0523980B9000246864 /* ImageCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C3CD0423980B9000246864 /* ImageCollectionViewController.swift */; };
@@ -41,6 +43,8 @@
 		736F8B102399628700FB57AC /* MyAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAnnotation.swift; sourceTree = "<group>"; };
 		736F8B1223996D4300FB57AC /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		737DBE1723AA608B00A24C37 /* Pin2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pin2.swift; sourceTree = "<group>"; };
+		737DBE1923AAE21700A24C37 /* SharedPinsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPinsTableViewController.swift; sourceTree = "<group>"; };
+		737DBE1B23AAF41700A24C37 /* SharedPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPin.swift; sourceTree = "<group>"; };
 		73AA3DB3239942F500289415 /* PhotosResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosResponse.swift; sourceTree = "<group>"; };
 		73AA3DB52399432E00289415 /* PhotoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoResponse.swift; sourceTree = "<group>"; };
 		73C3CD0423980B9000246864 /* ImageCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewController.swift; sourceTree = "<group>"; };
@@ -84,6 +88,7 @@
 			children = (
 				731800E623991B5A00E00EC5 /* API.swift */,
 				737DBE1723AA608B00A24C37 /* Pin2.swift */,
+				737DBE1B23AAF41700A24C37 /* SharedPin.swift */,
 				73AA3DB72399433400289415 /* JSONResponses */,
 			);
 			path = Model;
@@ -105,6 +110,7 @@
 				7336475323959D0B003F9B96 /* MapViewController.swift */,
 				73E2961C23A95BF100140C4C /* LoginViewController.swift */,
 				73C3CD0423980B9000246864 /* ImageCollectionViewController.swift */,
+				737DBE1923AAE21700A24C37 /* SharedPinsTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -299,10 +305,12 @@
 				736F8B112399628700FB57AC /* MyAnnotation.swift in Sources */,
 				736F8B1323996D4300FB57AC /* Response.swift in Sources */,
 				73AA3DB62399432E00289415 /* PhotoResponse.swift in Sources */,
+				737DBE1A23AAE21700A24C37 /* SharedPinsTableViewController.swift in Sources */,
 				73AA3DB4239942F500289415 /* PhotosResponse.swift in Sources */,
 				737DBE1823AA608B00A24C37 /* Pin2.swift in Sources */,
 				731800E52399150000E00EC5 /* ImageCollectionViewCell.swift in Sources */,
 				7336475423959D0B003F9B96 /* MapViewController.swift in Sources */,
+				737DBE1C23AAF41700A24C37 /* SharedPin.swift in Sources */,
 				7336475023959D0B003F9B96 /* AppDelegate.swift in Sources */,
 				731800E723991B5A00E00EC5 /* API.swift in Sources */,
 				73E2961D23A95BF100140C4C /* LoginViewController.swift in Sources */,

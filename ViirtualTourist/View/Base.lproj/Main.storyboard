@@ -67,10 +67,54 @@
             </objects>
             <point key="canvasLocation" x="-141" y="137"/>
         </scene>
+        <!--Shared Pins Table View Controller-->
+        <scene sceneID="MCo-Qx-JNz">
+            <objects>
+                <tableViewController id="gyN-Y6-I5h" customClass="SharedPinsTableViewController" customModule="ViirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="fvA-9B-CNh">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="reuseIdentifier" textLabel="yMe-rC-yJF" detailTextLabel="yYp-09-8ab" style="IBUITableViewCellStyleSubtitle" id="2ak-mb-2al">
+                                <rect key="frame" x="0.0" y="28" width="414" height="55.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2ak-mb-2al" id="tgv-gS-UUX">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="55.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yMe-rC-yJF">
+                                            <rect key="frame" x="20" y="10" width="33.5" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yYp-09-8ab">
+                                            <rect key="frame" x="20" y="31.5" width="44" height="14.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="gyN-Y6-I5h" id="WgY-2i-Wcf"/>
+                            <outlet property="delegate" destination="gyN-Y6-I5h" id="6lu-Xa-6IL"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="6dw-kf-up2"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Gwh-4D-zNi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1420" y="137"/>
+        </scene>
         <!--Map View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="mapViewController" id="BYZ-38-t0r" customClass="MapViewController" customModule="ViirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -92,14 +136,17 @@
                     <navigationItem key="navigationItem" id="vy0-df-h01"/>
                     <connections>
                         <outlet property="mapView" destination="mCI-IN-t2w" id="yNq-zz-D3P"/>
+                        <segue destination="gyN-Y6-I5h" kind="push" identifier="sharedPinsView" id="yT0-UW-tXL"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1090" y="137"/>
+            <point key="canvasLocation" x="706" y="137"/>
         </scene>
         <!--Image Collection View Controller-->
         <scene sceneID="cIY-JF-6Wj">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nwk-DB-gCn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <collectionViewController storyboardIdentifier="imageCollectionView" id="f8N-9T-ZcC" customClass="ImageCollectionViewController" customModule="ViirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="7r5-MT-oFD">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -150,9 +197,8 @@
                         <outlet property="flowLayout" destination="v01-zu-6Vz" id="b0e-VU-Bmm"/>
                     </connections>
                 </collectionViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Nwk-DB-gCn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1804" y="137"/>
+            <point key="canvasLocation" x="2143" y="137"/>
         </scene>
     </scenes>
     <resources>

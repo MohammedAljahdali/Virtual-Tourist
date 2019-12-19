@@ -5,6 +5,9 @@
 //  Created by Mohammed Khakidaljahdali on 17/12/2019.
 //
 
+// TODO: add tab controller, tab for shared pin, button for sharing a pin, table view of shared pins, you can click on them to see collection view
+//or click a button to add them to your map view and to your pins
+
 import UIKit
 import Firebase
 import FirebaseUI

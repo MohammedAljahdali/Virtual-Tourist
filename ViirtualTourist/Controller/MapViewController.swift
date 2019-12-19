@@ -17,8 +17,8 @@ import FirebaseUI
 class MapViewController: UIViewController {
     
     var editingMode: Bool = false
+    var sharingMode: Bool = false
     var pins2: [Pin2] = []
-    // TODO: Bool for sharing mode
     var authUI: FUIAuth!
     var user: User!
     var db: Firestore!
@@ -30,7 +30,12 @@ class MapViewController: UIViewController {
         let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleGesture(gestureReconizer:)))
         gestureRecognizer.delegate = self
         mapView.addGestureRecognizer(gestureRecognizer)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(setUpPinDeletion))
+        navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(setUpPinDeletion)),
+            UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(shareMode)),
+            UIBarButtonItem(title: "Shared Pins", style: .plain, target: self, action: #selector(presentSharedPins))
+        ]
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(setUpPinDeletion))
         navigationItem.title = "Virtual Tourist"
 //        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logout))
     }
@@ -69,10 +74,12 @@ extension MapViewController: MKMapViewDelegate, UIGestureRecognizerDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        if !editingMode {
-            sendPin(annotation: view.annotation! as! MyAnnotation)
-        } else {
+        if editingMode {
             deletePin(annotation: view.annotation! as! MyAnnotation)
+        } else if sharingMode {
+            sharePin(annotation: view.annotation! as! MyAnnotation)
+        } else {
+            sendPin(annotation: view.annotation! as! MyAnnotation)
         }
     }
  
@@ -88,14 +95,36 @@ extension MapViewController {
     }
     
     @objc func setUpPinDeletion() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(stopDeletion))
-        editingMode = true
+        if !sharingMode {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(stopDeletion))
+            editingMode = true
+        }
         
     }
     
     @objc func stopDeletion() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(setUpPinDeletion))
         editingMode = false
+    }
+    
+    @objc func shareMode() {
+        if !editingMode {
+            navigationItem.rightBarButtonItems = [
+                UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(setUpPinDeletion)),
+                UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(stopShareMode)),
+                UIBarButtonItem(title: "Shared Pins", style: .plain, target: self, action: #selector(presentSharedPins))
+            ]
+            sharingMode = true
+        }
+    }
+    
+    @objc func stopShareMode() {
+        navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(setUpPinDeletion)),
+            UIBarButtonItem(title: "Share", style: .done, target: self, action: #selector(shareMode)),
+            UIBarButtonItem(title: "Shared Pins", style: .plain, target: self, action: #selector(presentSharedPins))
+        ]
+        sharingMode = false
     }
     
     func deletePin(annotation: MyAnnotation) {
@@ -114,28 +143,49 @@ extension MapViewController {
         present(vc, animated: true, completion: nil)
     }
     
+    func sharePin(annotation: MyAnnotation) {
+        let pinID = "\(annotation.coordinate.longitude)&\(annotation.coordinate.latitude)"
+        let ref = db.collection("users").document("\(user.email!)").collection("pins").document(pinID)
+        ref.getDocument { (document, error) in
+            guard let document = document else {return}
+            let longitude = document.data()!["longitude"] as! Double
+            let latitude = document.data()!["latitude"] as! Double
+            let pageNumber = document.data()!["pageNumber"] as! Int
+            self.db.collection("sharedPins").document(pinID).setData([
+                "longitude": longitude,
+                "latitude": latitude,
+                "pageNumber": pageNumber,
+                "owner": self.user.displayName!
+            ])
+        }
+        ref.collection("urls").getDocuments { (documents, error) in
+            guard let documents = documents else {return}
+            var index = 0
+            for document in documents.documents {
+                let urlString = document.data()["url"] as! String
+                self.db.collection("sharedPins").document(pinID).collection("urls").document("\(index)").setData(["url":urlString])
+                index = index + 1
+            }
+        }
+    }
+    
+    @objc func presentSharedPins() {
+        if !editingMode && !sharingMode {
+            performSegue(withIdentifier: "sharedPinsView", sender: nil)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc = segue.destination as! SharedPinsTableViewController
+        vc.db = db
+        vc.user = user
+    }
+    
 }
 
 // MARK: Firebase Auth
 
 extension MapViewController: FUIAuthDelegate {
-    
-//    @objc func logout() {
-//        do {
-//            try authUI.signOut()
-//            user = nil
-//            let vc = storyboard?.instantiateViewController(identifier: "loginViewController") as! LoginViewController
-//            vc.user = nil
-//            vc.authUI = self.authUI
-//
-//            navigationController?.popViewController(animated: true)
-//        } catch {
-//            let alertVC = UIAlertController(title: "Logout Failed", message: "Sorry Logout failled: \(error.localizedDescription)", preferredStyle: .alert)
-//            alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//            self.present(alertVC, animated: true, completion: nil)
-//        }
-//    }
-    
     func pinsListener() {
         db.collection("users").document("\(user.email!)").collection("pins").addSnapshotListener { (document, error) in
             guard let document = document else {
